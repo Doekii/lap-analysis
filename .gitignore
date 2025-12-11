@@ -1,0 +1,4 @@
+# .gitignore content
+.github/
+.venv/
+.vscode/
