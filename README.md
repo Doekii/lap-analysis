@@ -31,7 +31,7 @@ Start the development server using Uvicorn:
 ```bash
 # Run from the 'backend' folder
 uvicorn app.main:app --reload
-
+```
 The API will be available at: **http://127.0.0.1:8000**
 
 ## 📚 API Documentation
@@ -75,3 +75,4 @@ backend/
 │       ├── laps.py       # Lap & Comparison endpoints
 │       └── sessions.py   # File listing endpoints
 └── requirements.txt      # Python dependencies
+```
