@@ -81,8 +81,8 @@ class TelemetryService:
             existing_tables = set(existing_tables_df['name'].tolist())
 
             # Prepare channel list
-            # We enforce 'Lap Dist' as the first channel
-            target_channels = ['Lap Dist'] + [c for c in channels if c != 'Lap Dist']
+            # We enforce 'Lap Dist', 'GPS Latitude', and 'GPS Longitude' as the first channels
+            target_channels = ['Lap Dist', 'GPS Latitude', 'GPS Longitude'] + [c for c in channels if c not in ['Lap Dist', 'GPS Latitude', 'GPS Longitude']]
             # Filter out requested channels that don't actually exist in the DB
             valid_channels = [c for c in target_channels if c in existing_tables]
 
@@ -176,7 +176,7 @@ class TelemetryService:
             final_df = final_df.where(pd.notnull(final_df), None)
             
             # Return list of dicts (FastAPI handles the JSON serialization)
-            return final_df.to_json(orient="records",  double_precision=4)
+            return final_df.to_json(orient="records")
 
         finally:
             con.close()
@@ -186,7 +186,7 @@ class TelemetryService:
         Calculates Time Delta. Returns a JSON string.
         """
         t0 = time.time()
-        print(f"[DEBUG] Starting comparison request: File1={file1} L{lap1} vs File2={file2} L{lap2}")
+        #print(f"[DEBUG] Starting comparison request: File1={file1} L{lap1} vs File2={file2} L{lap2}")
 
         req_channels = list(set(channels + ['Lap Dist']))
         
@@ -239,7 +239,7 @@ class TelemetryService:
                 result[f'{col}_Comp'] = y_comp_interp
                 result[f'{col}_Delta'] = y_comp_interp - df1[col].fillna(0).values
 
-        print(f"[DEBUG] Comparison finished in {time.time() - t0:.4f}s")
+        #print(f"[DEBUG] Comparison finished in {time.time() - t0:.4f}s")
         
         # 5. Return JSON string
-        return result.to_json(orient="records", double_precision=4)
+        return result.to_json(orient="records")
